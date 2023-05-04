@@ -1,7 +1,7 @@
 // Add imports above this line
 import { galleryItems } from './gallery-items';
-import simpleLightbox from 'simple-lightbox';
-import 'simplelightbox/dist/simpleLightbox.min.css'
+import SimpleLightbox from 'simplelightbox';
+import 'simplelightbox/dist/simpleLightbox.min.css';
 // Change code below this line
 
 console.log(galleryItems);
