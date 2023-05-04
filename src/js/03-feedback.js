@@ -1,38 +1,29 @@
-// import throttle from 'lodash.throttle';
+import Player from '@vimeo/player';
+import throttle from 'lodash.throttle';
 
-const LOCAL_KEY = 'feedback-form-state';
+const CURRENT_TIME_KEY = 'videoplayer-current-time';
 
-form = document.querySelector('.feedback-form');
+const iframe = document.querySelector('iframe');
+const player = new Vimeo(iframe, {
+  loop: true,
+  fullscreen: true,
+  quality: '1080p',
+});
 
-form.addEventListener('input', throttle(onInputData, 500));
-form.addEventListener('submit', onFormSubmit);
+const getCurrentTime = function (currentTime) {
+  const seconds = currentTime.seconds;
+  localStorage.setItem(CURRENT_TIME_KEY, JSON.stringify(seconds));
+};
 
-let dataForm = JSON.parse(localStorage.getItem(LOCAL_KEY)) || {};
-const { email, message } = form.elements;
-reloadPage();
+player.on('timeupdate', throttle(getCurrentTime, 1000));
 
-function onInputData(e) {
-  dataForm = { email: email.value, message: message.value };
-  localStorage.setItem(LOCAL_KEY, JSON.stringify(dataForm));
-}
+player.setCurrentTime(JSON.parse(localStorage.getItem(CURRENT_TIME_KEY)) || 0);
 
-function reloadPage() {
-  if (dataForm) {
-    email.value = dataForm.email || '';
-    message.value = dataForm.message || '';
-  }
-}
-
-function onFormSubmit(e) {
-  e.preventDefault();
-  console.log({ email: email.value, message: message.value });
-
-  if (email.value === '' || message.value === '') {
-    return alert('Please fill in all the fields!');
-  }
-
-  localStorage.removeItem(LOCAL_KEY);
-  e.currentTarget.reset();
-  dataForm = {};
-}
-
+player
+  .setColor('#d8e0ff')
+  .then(function (color) {
+    console.log('The new color value: #D8E0FF');
+  })
+  .catch(function (error) {
+    console.log('An error occurred while setting the color');
+  });
